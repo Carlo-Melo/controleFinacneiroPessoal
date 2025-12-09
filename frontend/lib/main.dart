@@ -47,7 +47,7 @@ class MyApp extends StatelessWidget {
           '/categories': (context) => CategoriesPage(),
           '/budgets': (context) => BudgetsPage(),
           '/transactions': (context) => TransactionsPage(),
-          '/users': (context) => UsersPage(),
+          '/users': (context) => ProfilePage(),
         },
       ),
     );
