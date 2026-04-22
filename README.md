@@ -204,4 +204,3 @@ Projeto de uso livre para fins educacionais e pessoais.
 
 ---
 
-👨‍💻 Desenvolvido por **Seu Nome Aqui**
