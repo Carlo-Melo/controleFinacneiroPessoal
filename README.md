@@ -1,206 +1,65 @@
-# 💰 FinanceApp – Controle Financeiro Pessoal (Full Stack)
+# FinanceApp — Controle Financeiro Pessoal
 
-O **FinanceApp** é um sistema **full stack** de controle financeiro pessoal, composto por um **backend em Spring Boot (API REST)** e um **frontend mobile em Flutter**.
+O FinanceApp é um protótipo acadêmico de controle financeiro pessoal. A interface, desenvolvida em Flutter, se comunica com uma API REST em Java e Spring Boot. O objetivo é oferecer uma forma visual de organizar categorias, transações e limites de orçamento.
 
-O objetivo do projeto é permitir que usuários gerenciem **gastos**, **categorias**, **orçamentos** e acompanhem sua vida financeira de forma **segura**, **visual** e **intuitiva**.
+## Funcionalidades
 
----
+- Cadastro, login e saída de usuário; autenticação da API com token JWT e senhas protegidas com BCrypt.
+- Cadastro, listagem, edição e exclusão de categorias.
+- Cadastro e listagem de transações vinculadas a categorias, com operações de atualização e exclusão disponíveis na API.
+- Cadastro, listagem e exclusão de orçamentos na interface; a API também oferece atualização.
+- Painel com resumo dos limites e transações, gráfico de distribuição por categoria e gráfico dos valores das transações.
 
-## 🧩 Arquitetura do Projeto
+## Tecnologias e organização
 
-```
-FinanceApp
-├── backend/   → API REST (Spring Boot)
-└── frontend/  → Aplicativo Mobile (Flutter)
-```
+| Parte | Tecnologias | Diretório |
+| --- | --- | --- |
+| Interface | Flutter, Dart, Provider, Dio e fl_chart | frontend/ |
+| API | Java 21, Spring Boot, Spring Security, Spring Data JPA e Maven | backend/ |
+| Dados | H2 em memória, configurado para demonstração local | backend/src/main/resources/application.properties |
 
-* **Backend**: responsável por regras de negócio, autenticação, segurança e persistência de dados
-* **Frontend**: aplicativo mobile que consome a API e exibe dashboards, gráficos e funcionalidades ao usuário
+## Executar localmente
 
----
+É necessário ter **Java 21** e o **Flutter SDK** instalados e disponíveis no terminal. O projeto inclui o Maven Wrapper, que baixa a versão necessária do Maven no primeiro uso. O download das dependências exige acesso à internet.
 
-## 🚀 Funcionalidades
+### 1. Iniciar a API
 
-### 👤 Usuários
+Em um terminal, a partir da raiz do repositório:
 
-* Cadastro de usuários
-* Login e logout
-* Senhas criptografadas com **BCrypt**
-* Autenticação via **Spring Security**
-* Cada usuário acessa apenas seus próprios dados
+    cd backend
+    .\mvnw.cmd spring-boot:run
 
-### 📂 Categorias
+Em Linux ou macOS, use `./mvnw spring-boot:run` no diretório `backend`. Aguarde a mensagem de inicialização; a API ficará disponível em `http://localhost:8080`.
 
-* Criar categorias personalizadas
-* Listar categorias do usuário autenticado
-* Atualizar e excluir apenas categorias próprias
+### 2. Iniciar a interface web
 
-### 💸 Transações
+Em outro terminal, a partir da raiz do repositório:
 
-* Registrar receitas e despesas
-* Associar transações a categorias
-* Listar transações do usuário
-* Atualizar e excluir apenas transações próprias
+    cd frontend
+    flutter pub get
+    flutter run -d web-server --web-hostname localhost --web-port 3000 --no-pub
 
-### 📊 Orçamentos
+Acesse [http://localhost:3000](http://localhost:3000) no navegador. Cadastre um usuário na tela inicial e faça login. Para encerrar, interrompa os processos nos terminais correspondentes.
 
-* Criar orçamentos por categoria
-* Definir limites de gastos
-* Listar, atualizar e remover orçamentos do usuário
+No Windows, se o Flutter informar que não consegue criar links simbólicos para plugins, habilite o Modo de Desenvolvedor do Windows e execute `flutter pub get` novamente.
 
-### 📈 Dashboard Financeiro (Frontend)
+## Estado e limitações do protótipo
 
-* Saldo total
-* Total gasto
-* Total de orçamentos
-* Gráfico de pizza (gastos por categoria)
-* Gráfico de linha (evolução das transações)
+- O H2 está configurado em memória: os dados são perdidos quando a API é encerrada ou reiniciada.
+- A interface usa `http://localhost:8080` como endereço fixo da API. Esse endereço atende à demonstração no mesmo computador; outros dispositivos ou ambientes exigem ajuste de configuração.
+- O indicador chamado “Saldo” no painel é a soma dos limites de orçamento menos a soma dos valores das transações. O protótipo não distingue receitas e despesas como tipos separados.
+- O gráfico de linhas mostra valores na ordem em que as transações são recebidas, sem agrupamento por período.
+- A aplicação requer revisão de segurança, controles de acesso, configuração de segredos e persistência antes de ser usada com dados reais ou disponibilizada em produção.
+- Integração bancária, notificações automáticas, exportação de relatórios e publicação nas lojas de aplicativos não fazem parte da implementação atual.
 
----
+## Testes
 
-## 🔐 Segurança
+O backend contém testes de serviços e de inicialização do contexto Spring. Para executá-los com Java 21, no diretório `backend`:
 
-### Backend
+    .\mvnw.cmd test
 
-* **Spring Security**
-* Implementação de `UserDetailsService`
-* Senhas armazenadas de forma segura
-* Validação de propriedade dos dados (User → Category / Transaction / Budget)
+No Linux ou macOS, use `./mvnw test`. O diretório `frontend/test` contém um teste gerado pelo modelo inicial do Flutter, que ainda precisa ser adaptado ao aplicativo.
 
-### Frontend
+## Repositório
 
-* Controle de sessão via `AuthProvider`
-* Logout seguro
-* Acesso apenas a endpoints autenticados
-
----
-
-## 🛠️ Tecnologias Utilizadas
-
-### Backend (API REST)
-
-* **Java 17+**
-* **Spring Boot**
-* **Spring Data JPA**
-* **Spring Security**
-* **Hibernate**
-* **Maven**
-* **Banco de dados relacional** (H2 / MySQL / PostgreSQL)
-
-### Frontend (Mobile)
-
-* **Flutter (Dart)**
-* **Provider** (Gerenciamento de estado)
-* **fl_chart** (Gráficos)
-* **Material Design**
-* **Dark Mode**
-
----
-
-## 📁 Estrutura dos Projetos
-
-### Backend
-
-```
-backend/
-├── entity
-│   ├── User
-│   ├── Category
-│   ├── Transaction
-│   └── Budget
-├── repository
-├── service
-├── controller
-└── security
-```
-
-### Frontend
-
-```
-frontend/
-├── lib/
-│   ├── pages/
-│   ├── providers/
-│   ├── models/
-│   ├── services/
-│   └── main.dart
-```
-
----
-
-## ▶️ Como Executar o Projeto
-
-### 🔹 Backend
-
-**Pré-requisitos**:
-
-* Java 17+
-* Maven
-* Banco de dados configurado em `application.properties`
-
-```bash
-# Entrar no backend
-cd backend
-
-# Executar a aplicação
-mvn spring-boot:run
-```
-
-API disponível em:
-
-```
-http://localhost:8080
-```
-
----
-
-### 🔹 Frontend
-
-**Pré-requisitos**:
-
-* Flutter SDK
-* Emulador ou dispositivo físico
-* Backend em execução
-
-```bash
-# Entrar no frontend
-cd frontend
-
-# Instalar dependências
-flutter pub get
-
-# Executar o app
-flutter run
-```
-
-> ⚠️ Configure corretamente a **URL da API** nos serviços HTTP do app.
-
----
-
-## 🎯 Diferenciais do Projeto
-
-* Arquitetura **full stack bem definida**
-* Separação clara de responsabilidades
-* Segurança e isolamento de dados por usuário
-* Dashboard visual com gráficos
-* Código organizado e escalável
-* Ideal para **portfólio**, **TCC** ou estudo de **Spring Boot + Flutter**
-
----
-
-## 📌 Possíveis Evoluções
-
-* Autenticação com JWT
-* Swagger/OpenAPI
-* Deploy com Docker
-* Notificações de limite de orçamento
-* Relatórios mensais em PDF
-
----
-
-## 📄 Licença
-
-Projeto de uso livre para fins educacionais e pessoais.
-
----
-
+[github.com/Carlo-Melo/controleFinacneiroPessoal](https://github.com/Carlo-Melo/controleFinacneiroPessoal)
